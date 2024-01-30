@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Pasternak.MoviesCatalog.MAUI.ViewModels"
+             x:Class="Pasternak.MoviesCatalog.MAUI.DirectorsPage"
+             x:Name="DirectorContentPageName"
+             Title="Directors">
+    <ScrollView>
+    <VerticalStackLayout>
+        <VerticalStackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Filter By" WidthRequest="70" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Margin="10,10,0,10"/>
+                <Picker x:Name="FilterCriteriaPicker" SelectedItem="{Binding FilterType}" WidthRequest="150" Margin="10,10,0,10">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Name</x:String>
+                            <x:String>Age</x:String>
+                            <x:String>Nationality</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Entry Placeholder="Search Text" Text="{Binding FilterPhrase}" WidthRequest="200" Margin="10,10,0,10"/>
+                <Button Text="Search" Command="{Binding SearchCommand}" Margin="10,10,0,10"/>
+                <Button Text="Clear Filter" Command="{Binding ClearFilterCommand}" Margin="10,10,0,10"/>
+            </StackLayout>
+        </VerticalStackLayout>
+
+        <StackLayout VerticalOptions="FillAndExpand" HeightRequest="250">
+            <ListView x:Name="DirectorsList" ItemsSource="{Binding Directors}" ItemTapped="HandleDirectorItemTapped"
+                  Margin="10,10,10,10">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Border Stroke="{StaticResource Secondary}" StrokeThickness="2">
+                                <HorizontalStackLayout x:DataType="viewmodel:DirectorViewModel">
+                                    <Label Text="{Binding Name}" WidthRequest="200" Padding="5"/>
+                                    <Label Text="{Binding Age}" WidthRequest="50" Padding="5"/>
+                                    <Label Text="{Binding Nationality}" WidthRequest="200" Padding="5"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+
+        <Button Text="New Director" Command="{Binding CreateNewDirectorCommand}" WidthRequest="130" HorizontalOptions="Start"
+                Margin="10,0,10,10"/>
+
+        <Frame BackgroundColor="{StaticResource Gray900}" BorderColor="{StaticResource Primary}" CornerRadius="15" WidthRequest="320">
+            <Frame.Style>
+                <Style TargetType="Frame">
+                    <Style.Triggers>
+                        <MultiTrigger TargetType="Frame">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding IsEditing}" Value="False" />
+                                <BindingCondition Binding="{Binding IsCreating}" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsVisible" Value="False" />
+                        </MultiTrigger>
+
+                        <MultiTrigger TargetType="Frame">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding IsEditing}" Value="True" />
+                                <BindingCondition Binding="{Binding IsCreating}" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsVisible" Value="True" />
+                        </MultiTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Frame.Style>
+
+            <VerticalStackLayout HorizontalOptions="Start">
+
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+              ColumnDefinitions="Auto,Auto"
+              BindingContext="{Binding DirectorEdit}">
+
+                    <Label Grid.Column="0" Grid.Row="1" Text="Name" WidthRequest="100"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Padding="0,0,10,0"/>
+                    <Entry WidthRequest="200" Grid.Column="1" Grid.Row="1" Text="{Binding Name}"/>
+
+                    <Label Grid.Column="0" Grid.Row="2" Text="Age" WidthRequest="100"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Padding="0,0,10,0"/>
+                    <Entry WidthRequest="200" Grid.Column="1" Grid.Row="2" Text="{Binding Age}"/>
+
+                    <Label Grid.Column="0" Grid.Row="3" Text="Nationality" WidthRequest="100"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Padding="0,0,10,0"/>
+                    <Entry WidthRequest="200" Grid.Column="1" Grid.Row="3" Text="{Binding Nationality}"/>
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Text="Save" Command="{Binding SaveDirectorCommand}" Grid.Column="0" Margin="5,10,5,0"/>
+                    <Button Text="Delete" Command="{Binding DeleteDirectorCommand}" Grid.Column="1" Margin="5,10,5,0"/>
+                    <Button Text="Cancel" Command="{Binding CancelCommand}" Grid.Column="2" Margin="5,10,5,0"/>
+                </Grid>
+            </VerticalStackLayout>
+        </Frame>
+    </VerticalStackLayout>
+        </ScrollView>
+</ContentPage>

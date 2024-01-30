@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Pasternak.MoviesCatalog.MAUI.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Pasternak.MoviesCatalog.MAUI.MoviesPage"
+             x:Name="MoviesContentPageName"
+             Title="Movies">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <viewmodel:MyEnumToIntConverter x:Key="Myconverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView>
+
+    <VerticalStackLayout>
+        <VerticalStackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Filter By" WidthRequest="70" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Margin="10,10,0,10"/>
+                <Picker x:Name="FilterCriteriaPicker" SelectedItem="{Binding FilterType}" WidthRequest="150" Margin="10,10,0,10">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Title</x:String>
+                            <x:String>ReleaseYear</x:String>
+                            <x:String>Genre</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Entry Placeholder="Search Text" Text="{Binding FilterPhrase}" WidthRequest="200" Margin="10,10,0,10"/>
+                <Button Text="Search" Command="{Binding SearchCommand}" Margin="10,10,0,10"/>
+                <Button Text="Clear Filter" Command="{Binding ClearFilterCommand}" Margin="10,10,0,10"/>
+            </StackLayout>
+        </VerticalStackLayout>
+
+        <StackLayout VerticalOptions="FillAndExpand" HeightRequest="250">
+            <ListView x:Name="MoviesList" ItemsSource="{Binding Movies}" ItemTapped="HandleMovieItemTapped"
+                  Margin="10,10,10,10">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Border Stroke="{StaticResource Secondary}" StrokeThickness="2">
+                                <HorizontalStackLayout x:DataType="viewmodel:MovieViewModel">
+                                    <Label Text="{Binding Title}" WidthRequest="200" Padding="5"/>
+                                    <Label Text="{Binding ReleaseYear}" WidthRequest="50" Padding="5"/>
+                                    <Label Text="{Binding MovieGenre}" WidthRequest="100" Padding="5"/>
+                                    <Label Text="{Binding Director.Name}" WidthRequest="200" Padding="5"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+
+        <Button Text="New Movie" Command="{Binding CreateNewMovieCommand}" WidthRequest="100" HorizontalOptions="Start"
+                Margin="10,0,10,10"/>
+
+        <Frame BackgroundColor="{StaticResource Gray900}" BorderColor="{StaticResource Primary}" CornerRadius="15" WidthRequest="320">
+            <Frame.Style>
+                <Style TargetType="Frame">
+                    <Style.Triggers>
+                        <MultiTrigger TargetType="Frame">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding IsEditing}" Value="False" />
+                                <BindingCondition Binding="{Binding IsCreating}" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsVisible" Value="False" />
+                        </MultiTrigger>
+
+                        <MultiTrigger TargetType="Frame">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding IsEditing}" Value="True" />
+                                <BindingCondition Binding="{Binding IsCreating}" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsVisible" Value="True" />
+                        </MultiTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Frame.Style>
+
+            <VerticalStackLayout HorizontalOptions="Start">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+              ColumnDefinitions="Auto,Auto"
+              BindingContext="{Binding MovieEdit}">
+
+                    <Label Grid.Column="0" Grid.Row="1" Text="Title" IsVisible="{Binding IsEditing}" WidthRequest="100"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Padding="0,0,10,0"/>
+                    <Entry WidthRequest="200" Grid.Column="1" Grid.Row="1" Text="{Binding Title}" IsVisible="{Binding IsEditing}"/>
+
+                    <Label Grid.Column="0" Grid.Row="2" Text="Release Year" WidthRequest="100"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Padding="0,0,10,0"/>
+                    <Entry WidthRequest="200" Grid.Column="1" Grid.Row="2" Text="{Binding ReleaseYear}"/>
+
+                    <Label Grid.Column="0" Grid.Row="3" Text="Genre" WidthRequest="100"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Padding="0,0,10,0"/>
+                    <Picker WidthRequest="200" Grid.Column="1" Grid.Row="3"  ItemsSource="{Binding AllGenres}" 
+                    SelectedIndex="{Binding MovieGenre, Converter={StaticResource Myconverter}, Mode=TwoWay}" />
+
+                    <Label Grid.Column="0" Grid.Row="4" Text="Director" WidthRequest="100"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Padding="0,0,10,0"/>
+                    <Picker ItemsSource="{Binding BindingContext.AllDirectors, Source={x:Reference MoviesContentPageName}}"
+                        ItemDisplayBinding="{Binding Name}"
+                        SelectedItem="{Binding Director}" WidthRequest="200"
+                    Grid.Row="4" Grid.Column="1" VerticalOptions="Start" />
+
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Text="Save" Command="{Binding SaveMovieCommand}" Grid.Column="0" Margin="5,10,5,0"/>
+                    <Button Text="Delete" Command="{Binding DeleteMovieCommand}" Grid.Column="1" Margin="5,10,5,0"/>
+                    <Button Text="Cancel" Command="{Binding CancelCommand}" Grid.Column="2" Margin="5,10,5,0"/>
+                </Grid>
+            </VerticalStackLayout>
+        </Frame>
+    </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

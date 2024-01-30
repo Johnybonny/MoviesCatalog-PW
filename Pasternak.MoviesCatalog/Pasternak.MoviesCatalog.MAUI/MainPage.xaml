@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Pasternak.MoviesCatalog.MAUI.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20">
+
+            <Image
+                Source="movie_clip.png"
+                HeightRequest="185"
+                Aspect="AspectFit"
+                HorizontalOptions="CenterAndExpand"
+                SemanticProperties.Description="movie clip icon" />
+
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Label Text="Welcome to the" FontSize="40" TextColor="White"
+                       HorizontalOptions="Start" VerticalOptions="CenterAndExpand" />
+                <Label Text=" Movies Catalog" FontSize="40" TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Start" VerticalOptions="CenterAndExpand" />
+            </HorizontalStackLayout>
+
+            <Label Text="Discover a world of cinematic wonders in the diverse and captivating Movies Catalog."
+                   FontSize="24" TextColor="White"
+                   HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Margin="0,0,0,30"/>
+
+            <HorizontalStackLayout
+                Spacing="30"
+                HorizontalOptions="Center"
+                VerticalOptions="CenterAndExpand">
+                
+                <Frame
+                    BackgroundColor="{StaticResource Tertiary}"
+                    BorderColor="{StaticResource Tertiary}"
+                    CornerRadius="15"
+                    WidthRequest="300"
+                    HeightRequest="300"
+                    Padding="10">
+                    <VerticalStackLayout VerticalOptions="CenterAndExpand">
+                        <Label Text="Directors" FontSize="40" TextColor="White" HorizontalOptions="Center" />
+                        <Label Text="Explore the creative minds behind cinematic wonders." FontSize="18" TextColor="White" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame
+                    BackgroundColor="{StaticResource Secondary}"
+                    BorderColor="{StaticResource Secondary}"
+                    CornerRadius="15"
+                    WidthRequest="300"
+                    HeightRequest="300"
+                    Padding="10">
+                    <VerticalStackLayout VerticalOptions="CenterAndExpand">
+                        <Label Text="Movies" FontSize="40" TextColor="White" HorizontalOptions="Center" />
+                        <Label Text="Immerse yourself in a diverse collection of captivating films." FontSize="18" TextColor="White" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Frame>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
